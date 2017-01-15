@@ -1,0 +1,5 @@
+Commands to build this program:
+
+source scripts/build-qt5-armhf.sh
+./qt-5.7.1-armhf/bin/qmake
+make
