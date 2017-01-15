@@ -1,0 +1,11 @@
+TARGET = mcpha-server
+QT += core websockets
+QT -= gui
+CONFIG += static console
+TEMPLATE = app
+QMAKE_LFLAGS += -static
+OBJECTS_DIR = build
+MOC_DIR = build
+RCC_DIR = build
+HEADERS = server.h
+SOURCES = server.cpp main.cpp
