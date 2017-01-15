@@ -1,5 +1,12 @@
-Commands to build this program:
+Setting up the Vivado environment:
 
-source scripts/build-qt5-armhf.sh
-./qt-5.7.1-armhf/bin/qmake
-make
+  source /opt/Xilinx/Vivado/2016.4/settings64.sh
+
+Building Qt:
+
+  source scripts/build-qt5-armhf.sh
+
+Building mcpha-server:
+
+  ./qt-5.7.1-armhf/bin/qmake
+  make
