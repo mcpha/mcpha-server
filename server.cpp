@@ -93,18 +93,18 @@ Server::Server(int16_t port, QObject *parent):
   *m_Rst[2] |= 3;
 
   m_BufferTimer = new QByteArray();
-  m_BufferTimer->resize(12);
+  m_BufferTimer->resize(4 + 8);
 
   m_BufferHist = new QByteArray();
   m_BufferHist->resize(4 + 16384 * 4);
 
   m_BufferStatus = new QByteArray();
-  m_BufferStatus->resize(8);
+  m_BufferStatus->resize(4 + 4);
 
   m_BufferScope = new QByteArray();
   m_BufferScope->resize(4 + 65536 * 4);
 
-  m_WebSocketServer = new QWebSocketServer(QString("SDR"), QWebSocketServer::NonSecureMode, this);
+  m_WebSocketServer = new QWebSocketServer(QString("MCPHA"), QWebSocketServer::NonSecureMode, this);
   if(m_WebSocketServer->listen(QHostAddress::Any, port))
   {
     connect(m_WebSocketServer, SIGNAL(newConnection()), this, SLOT(on_WebSocketServer_newConnection()));
