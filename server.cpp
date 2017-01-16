@@ -130,11 +130,11 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
 {
   uint32_t start, pre, tot, one, two;
   uint32_t code, chan;
-  uint64_t data;
+  double data;
 
   memcpy(&code, message.constData() + 0, 4);
-  memcpy(&chan, message.constData() + 1, 4);
-  memcpy(&data, message.constData() + 2, 8);
+  memcpy(&chan, message.constData() + 4, 4);
+  memcpy(&data, message.constData() + 8, 8);
 
   if(code == 0)
   {
@@ -324,14 +324,18 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
     /* read timer */
     if(chan == 0)
     {
-      *(uint32_t *)(m_BufferTimer->data() + 0) = 0;
-      memcpy(m_BufferTimer->data() + 4, m_Sts + 12, 8);
+      code = 0;
+      memcpy(m_BufferTimer->data() + 0, &code, 4);
+      data = *(uint64_t *)(m_Sts + 12);
+      memcpy(m_BufferTimer->data() + 4, &data, 8);
       m_WebSocket->sendBinaryMessage(*m_BufferTimer);
     }
     else if(chan == 1)
     {
-      *(uint32_t *)(m_BufferTimer->data() + 0) = 1;
-      memcpy(m_BufferTimer->data() + 4, m_Sts + 20, 8);
+      code = 1;
+      memcpy(m_BufferTimer->data() + 0, &code, 4);
+      data = *(uint64_t *)(m_Sts + 20);
+      memcpy(m_BufferTimer->data() + 4, &data, 8);
       m_WebSocket->sendBinaryMessage(*m_BufferTimer);
     }
   }
@@ -340,13 +344,15 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
     /* read histogram */
     if(chan == 0)
     {
-      *(uint32_t *)(m_BufferTimer->data() + 0) = 2;
+      code = 2;
+      memcpy(m_BufferHist->data() + 0, &code, 4);
       memcpy(m_BufferHist->data() + 4, m_Hist[0], 65536);
       m_WebSocket->sendBinaryMessage(*m_BufferHist);
     }
     else if(chan == 1)
     {
-      *(uint32_t *)(m_BufferTimer->data() + 0) = 3;
+      code = 3;
+      memcpy(m_BufferHist->data() + 0, &code, 4);
       memcpy(m_BufferHist->data() + 4, m_Hist[1], 65536);
       m_WebSocket->sendBinaryMessage(*m_BufferHist);
     }
@@ -414,7 +420,8 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
   else if(code == 22)
   {
     /* read oscilloscope status */
-    *(uint32_t *)(m_BufferTimer->data() + 0) = 4;
+    code = 4;
+    memcpy(m_BufferStatus->data() + 0, &code, 4);
     memcpy(m_BufferStatus->data() + 4, m_Sts + 44, 4);
     m_WebSocket->sendBinaryMessage(*m_BufferStatus);
   }
@@ -426,7 +433,8 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
     memcpy(&start, m_Sts + 44, 4);
     start >>= 1;
     start = (start - pre) & 0x007FFFFF;
-    *(uint32_t *)(m_BufferTimer->data() + 0) = 5;
+    code = 5;
+    memcpy(m_BufferScope->data() + 0, &code, 4);
     if(start + tot <= 0x007FFFFF)
     {
       memcpy(m_BufferScope->data() + 4, m_Scope + start * 4, tot * 4);
