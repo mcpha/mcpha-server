@@ -326,16 +326,14 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
     {
       code = 0;
       memcpy(m_BufferTimer->data() + 0, &code, 4);
-      data = *(uint64_t *)(m_Sts + 12);
-      memcpy(m_BufferTimer->data() + 4, &data, 8);
+      memcpy(m_BufferTimer->data() + 4, m_Sts + 12, 8);
       m_WebSocket->sendBinaryMessage(*m_BufferTimer);
     }
     else if(chan == 1)
     {
       code = 1;
       memcpy(m_BufferTimer->data() + 0, &code, 4);
-      data = *(uint64_t *)(m_Sts + 20);
-      memcpy(m_BufferTimer->data() + 4, &data, 8);
+      memcpy(m_BufferTimer->data() + 4, m_Sts + 20, 8);
       m_WebSocket->sendBinaryMessage(*m_BufferTimer);
     }
   }
