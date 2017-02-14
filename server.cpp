@@ -132,6 +132,8 @@ void Server::on_WebSocket_binaryMessageReceived(QByteArray message)
   uint32_t code, chan;
   double data;
 
+  if(message.size() < 16) return;
+
   memcpy(&code, message.constData() + 0, 4);
   memcpy(&chan, message.constData() + 4, 4);
   memcpy(&data, message.constData() + 8, 8);
